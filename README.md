@@ -2,6 +2,8 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/safeharbor.svg?label=pypi)](https://pypi.org/project/safeharbor/)
 [![Python](https://img.shields.io/pypi/pyversions/safeharbor.svg?cacheSeconds=86400)](https://pypi.org/project/safeharbor/)
+[![CI](https://img.shields.io/github/actions/workflow/status/yablokolabs/safe-harbor/ci.yml?branch=main&label=CI)](https://github.com/yablokolabs/safe-harbor/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/actions/workflow/status/yablokolabs/safe-harbor/pypi.yml?label=release)](https://github.com/yablokolabs/safe-harbor/actions/workflows/pypi.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/github-yablokolabs%2Fsafe--harbor-blue.svg)](https://github.com/yablokolabs/safe-harbor)
 
@@ -257,7 +259,11 @@ Generation manifest               TESTED
 CLI exit codes                    TESTED
 Integration adapter boundaries    TESTED
 Bash syntax / systemd units       TESTED
+CI: pytest on 3.11/3.12/3.13      TESTED (GitHub Actions, every push)
+CI: shellcheck + bash -n           TESTED (GitHub Actions)
 Ubuntu preflight                  LOCALLY SIMULATED (honest FAIL on sub-spec hosts)
+Offline bundle on GitHub Release  TESTED (v0.1.0: PyPI + bundle artifacts)
+Wheelhouse deterministic rebuild TESTED (byte-identical across Debian + Ubuntu CI)
 Ubuntu deployment                 REQUIRES INTEGRATION
 Hermes installation (offline env) REQUIRES INTEGRATION
 Restate systemd service lifecycle REQUIRES INTEGRATION
