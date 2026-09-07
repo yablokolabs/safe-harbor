@@ -40,18 +40,31 @@ def _manager_os_check(ctx: Context) -> CheckResult:
         return CheckResult(
             "manager_os", "OK", f"{distro} {version} {arch}", evidence={"os": distro, "version": version}
         )
+
+    # Any other Linux host (Debian build machine, other Ubuntu releases used
+    # for development/CI, etc.) is reported honestly as WARN: the tool runs
+    # and can validate, but this is not the Gen1 target. Strict OS rejection
+    # belongs to the deploy-time gate (deploy/preflight.sh), not to a runtime
+    # status check. FAIL is reserved for hosts that are not Linux at all or
+    # whose OS cannot be determined.
     if distro == "debian":
-        # The Gen1 manager target is Ubuntu; a Debian host is a build machine.
         return CheckResult(
             "manager_os",
             "WARN",
             f"{distro} {version} {arch} — build/acquisition machine, not the Ubuntu Gen1 target",
             evidence={"os": distro, "version": version},
         )
+    if distro != "unknown" and version != "unknown":
+        return CheckResult(
+            "manager_os",
+            "WARN",
+            f"{distro} {version} {arch} — Linux host, but not the Ubuntu 26.04 Gen1 target",
+            evidence={"os": distro, "version": version},
+        )
     return CheckResult(
         "manager_os",
         "FAIL",
-        f"unsupported OS {distro} {version} {arch}",
+        f"unsupported OS {distro} {version} {arch} (/etc/os-release unreadable or not Linux)",
     )
 
 
