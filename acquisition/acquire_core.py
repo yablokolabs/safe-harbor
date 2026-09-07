@@ -27,7 +27,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
+import subprocess
 import sys
 import tarfile
 import urllib.error
@@ -91,6 +93,50 @@ def fetch(url: str, dest: Path) -> None:
             tmp.unlink()
 
 
+def build_recipe_path(entry: dict) -> Path | None:
+    """Return the absolute recipe path for a locally-built artifact."""
+    recipe = entry.get("build_recipe")
+    if not recipe:
+        return None
+    return REPO_ROOT / recipe
+
+
+def build_artifact(entry: dict, dest: Path) -> None:
+    """Build a locally-built artifact via its recipe (e.g. the python-wheels
+    wheelhouse, which is assembled from pinned immutable PyPI files rather
+    than downloaded from one URL). Requires network on the acquisition
+    machine; never runs on the target.
+
+    The recipe writes the artifact to a staging dir it owns; we then move it
+    into place so a failed build never leaves a partial artifact at the
+    canonical cache path.
+    """
+    recipe = build_recipe_path(entry)
+    if recipe is None or not recipe.is_file():
+        raise AcquireError(
+            f"{entry.get('artifact_filename', '?')}: marked as locally built "
+            f"but build_recipe {recipe} is missing"
+        )
+    if not dest.parent.is_dir():
+        dest.parent.mkdir(parents=True, exist_ok=True)
+    staging = dest.parent / f".staging-{dest.name}.{os.getpid()}"
+    staging.mkdir(exist_ok=True)
+    try:
+        subprocess.run(
+            [str(recipe), "--output", str(staging)],
+            check=True,
+            capture_output=False,
+        )
+        produced = staging / entry["artifact_filename"]
+        if not produced.is_file():
+            raise AcquireError(
+                f"recipe {recipe.name} did not produce {produced}"
+            )
+        produced.replace(dest)
+    finally:
+        shutil.rmtree(staging, ignore_errors=True)
+
+
 def verify_entry(entry: dict, path: Path) -> tuple[bool, str]:
     """Verify one artifact. Returns (ok, detail)."""
     if not path.is_file():
@@ -142,8 +188,23 @@ def cmd_acquire(if_missing: bool) -> int:
             ok = ok and verified
             report.append(f"cached   {detail}")
             continue
+        if entry.get("build_recipe"):
+            # Locally-built artifact (e.g. the python-wheels wheelhouse):
+            # run the deterministic recipe instead of fetching a URL.
+            print(f"building {entry['artifact_filename']} ...")
+            try:
+                build_artifact(entry, path)
+            except (AcquireError, subprocess.CalledProcessError) as exc:
+                print(f"FAIL: {exc}", file=sys.stderr)
+                ok = False
+                report.append(f"FAILED   {entry['artifact_filename']}: {exc}")
+                continue
+            verified, detail = verify_entry(entry, path)
+            ok = ok and verified
+            report.append(("built " if verified else "FAILED   ") + detail)
+            continue
         if not url:
-            print(f"FAIL: {entry['artifact_filename']} has no url in lock", file=sys.stderr)
+            print(f"FAIL: {entry['artifact_filename']} has no url and no build_recipe in lock", file=sys.stderr)
             ok = False
             continue
         print(f"acquiring {entry['artifact_filename']} ...")

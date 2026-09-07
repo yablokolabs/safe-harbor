@@ -76,6 +76,10 @@ jobs:
 
       - name: Acquire and verify locked artifacts
         run: |
+          # The python-wheels artifact is a deterministic local build (not a
+          # download); CI has no cache, so build it first, then acquire the
+          # remaining (downloaded) artifacts and verify everything.
+          ./acquisition/build-wheelhouse.sh
           ./acquisition/acquire.sh --if-missing
           ./acquisition/verify.sh --strict
 

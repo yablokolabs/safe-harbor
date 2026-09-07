@@ -49,12 +49,12 @@
       "release": "jnaapakam-0.5.1",
       "artifact_filename": "jnaapakam-wheels-cp313-amd64.tar.gz",
       "architecture": "amd64",
-      "url": "built locally from PyPI wheels (jnaapakam 0.5.1 + aiohttp + transitive deps, manylinux2014 cp313)",
-      "sha256": "29164734ae0e23f7ec6ddbb11adb107bf78c76f1e5774cbaba277be8ae4c4bec",
-      "size_bytes": 2643442,
+      "build_recipe": "acquisition/build-wheelhouse.sh",
+      "sha256": "c8bad21a4b44aaacc597569e428a7b7cfb011794af3bcd9ebdbd1102d36f4b2f",
+      "size_bytes": 2643072,
       "upstream_checksum": null,
-      "upstream_checksum_source": "not an upstream artifact; built with 'pip download' and hashed by Safe Harbor acquisition",
-      "acquisition_timestamp": "2026-09-07T07:31:00+00:00",
+      "upstream_checksum_source": "not an upstream artifact; deterministically rebuilt from pinned immutable PyPI files via build-wheelhouse.sh (byte-reproducible tar)",
+      "acquisition_timestamp": "2026-09-07T09:35:00+00:00",
       "verification_status": "built-and-hashed"
     },
     {
