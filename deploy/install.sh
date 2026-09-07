@@ -33,10 +33,8 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 SOFTWARE_DIR="${SH_SOFTWARE_DIR:-/opt/safe-harbor/software}"
 CONFIG_DIR="${SH_CONFIG_DIR:-/etc/safe-harbor}"
 STATE_DIR="${SH_STATE_DIR:-/var/lib/safe-harbor}"
-LOG_DIR="${SH_LOG_DIR:-/var/log/safe-harbor}"
-BACKUP_DIR="${SH_BACKUP_DIR:-${STATE_DIR}/backups}"
-SERVICE_USER="safeharbor"
-SERVICE_GROUP="safeharbor"
+# bootstrap.sh derives LOG_DIR/BACKUP_DIR and the service account from the
+# same SH_* environment, so the paths always match the layout it creates.
 
 # Where verified artifacts live: explicit --bundle-dir, else the extracted
 # bundle layout (artifacts/ NEXT TO the safe-harbor/ checkout), else a dev
@@ -97,8 +95,7 @@ fi
 # --- artifact verification -------------------------------------------------
 if [[ "${DRY}" != "1" ]]; then
     say "verifying offline artifacts"
-    (cd "${ARTIFACTS_DIR}" && sha256sum -c "${CHECKSUMS}")
-    if [[ $? -ne 0 ]]; then
+    if ! (cd "${ARTIFACTS_DIR}" && sha256sum -c "${CHECKSUMS}"); then
         echo "ERROR: artifact verification FAILED — refusing to install" >&2
         exit 1
     fi

@@ -114,9 +114,15 @@ else
 fi
 
 # --- network --------------------------------------------------------------
-IFACES=$(ls /sys/class/net 2>/dev/null | grep -v '^lo$' || true)
+IFACES=""
+for iface in /sys/class/net/*; do
+    name="${iface##*/}"
+    if [[ "${name}" != "lo" ]] && [[ -d "${iface}" ]]; then
+        IFACES="${IFACES}${IFACES:+ }${name}"
+    fi
+done
 if [[ -n "${IFACES}" ]]; then
-    pass "network" "interfaces: $(echo "${IFACES}" | tr '\n' ' ')"
+    pass "network" "interfaces: ${IFACES}"
 else
     fail "network" "no non-loopback network interface found"
 fi
