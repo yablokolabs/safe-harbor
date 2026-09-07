@@ -1,5 +1,10 @@
 # Safe Harbor
 
+[![PyPI version](https://img.shields.io/pypi/v/safeharbor.svg?label=pypi)](https://pypi.org/project/safeharbor/)
+[![Python](https://img.shields.io/pypi/pyversions/safeharbor.svg)](https://pypi.org/project/safeharbor/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![GitHub](https://img.shields.io/badge/github-yablokolabs%2Fsafe--harbor-blue.svg)](https://github.com/yablokolabs/safe-harbor)
+
 **Yabloko Labs** — open-source project for reproducible deployment, recovery,
 validation and migration of persistent local AI agent environments.
 
@@ -319,6 +324,35 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 make check                             # bash -n + python compile + shellcheck (if present)
 make bundle                            # build the offline bundle
 ```
+
+## Distribution (PyPI)
+
+The `safeharbor` CLI is published to [PyPI](https://pypi.org/project/safeharbor/)
+via trusted publishing (OIDC) — no tokens are stored in this repository.
+
+The workflow `.github/workflows/pypi.yml` runs on every `v*` tag, verifies the
+tag matches the version in `pyproject.toml`, builds the sdist + wheel, and
+uploads. The CLI has zero runtime dependencies and works fully offline once
+installed, so PyPI is purely a distribution channel for the tool itself —
+deploying a target node still happens from the verified offline bundle.
+
+```bash
+pip install safeharbor        # or: pipx install safeharbor
+safeharbor version
+```
+
+To release a new version:
+
+```bash
+# bump version in pyproject.toml, commit, then:
+git tag v0.2.0
+git push origin v0.2.0        # workflow publishes automatically
+```
+
+First-time trusted-publisher setup (already done for v0.1.0):
+[pypi.org/manage/account/publishing](https://pypi.org/manage/account/publishing/)
+— owner `yablokolabs`, repository `safe-harbor`, workflow `pypi.yml`,
+environment `pypi`.
 
 ## License
 
