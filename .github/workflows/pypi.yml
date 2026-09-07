@@ -10,10 +10,16 @@ name: Publish to PyPI
 #        PyPI Project:  safeharbor
 #        GitHub Owner:  yablokolabs
 #        GitHub Repo:   safe-harbor
-#        Workflow name: publish-to-pypi.yml   (the file name below)
+#        Workflow name: pypi.yml   (the workflow FILE NAME, not the display
+#                               name "Publish to PyPI")
 #        Environment:   (leave empty)
 #   4. Tag the release as v<version> (e.g. v0.1.0) and push:
 #        git tag v0.1.0 && git push origin v0.1.0
+#
+# Troubleshooting: if the publish step fails with "environment: MISSING" or a
+# trusted-publishing exchange failure, the pending publisher on PyPI does not
+# match this workflow. Re-check on https://pypi.org/manage/account/publishing/
+# that the workflow name is exactly "pypi.yml".
 
 on:
   push:
