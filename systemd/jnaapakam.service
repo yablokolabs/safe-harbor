@@ -1,0 +1,35 @@
+# Safe Harbor Gen1 — jñāpakaṁ continuity memory server (0.5.1).
+#
+# Binds 127.0.0.1:8889 only (loopback). MEMORY_AUTH_TOKEN is not needed
+# while the bind stays loopback; the moment the bind widens, the token
+# becomes mandatory (upstream rule — see pinned commit README).
+#
+# The store lives at /var/lib/safe-harbor/jnaapakam/memory.db; soul files
+# (SOUL.md/IDENTITY.md/MEMORY.md) live under /var/lib/safe-harbor/resident/.
+[Unit]
+Description=Safe Harbor jñāpakaṁ continuity memory server (0.5.1)
+Documentation=https://github.com/yablokolabs/jnaapakam
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=safeharbor
+Group=safeharbor
+ExecStart=/opt/safe-harbor/software/jnaapakam/venv/bin/jnaapakam serve \
+    --host 127.0.0.1 \
+    --port 8889 \
+    --db /var/lib/safe-harbor/jnaapakam/memory.db
+EnvironmentFile=-/etc/safe-harbor/jnaapakam/environment
+Restart=on-failure
+RestartSec=5
+# hardening / least privilege
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/safe-harbor/jnaapakam /var/lib/safe-harbor/resident
+StateDirectory=safe-harbor/jnaapakam
+
+[Install]
+WantedBy=multi-user.target

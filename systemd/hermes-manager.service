@@ -1,0 +1,40 @@
+# Safe Harbor Gen1 — Hermes Agent manager gateway (v0.21.0 / tag v2026.8.31).
+#
+# HERMES_HOME is redirected into the persistent state tree so all Hermes
+# agent data (config, conversations, skills, A2A audit) is portable and
+# never lives under /opt/safe-harbor/software.
+#
+# The gateway is started with `hermes gateway` (verified command from the
+# pinned source). Exact first-boot profile/configuration behavior on the
+# Ubuntu target is REQUIRES_INTEGRATION_TEST — until then this unit is
+# installed and enabled but intentionally NOT started by the installer.
+#
+# A2A security is configured through the environment file (never in this
+# unit): A2A_HOST (explicit bind), A2A_BEARER_TOKEN / A2A_PEER_TOKENS
+# (authentication), A2A_TRUSTED_PEERS (allow-list). With no tokens set,
+# Hermes A2A refuses to bind beyond 127.0.0.1 (upstream rule).
+[Unit]
+Description=Safe Harbor Hermes Agent manager gateway (v0.21.0)
+Documentation=https://hermes-agent.nousresearch.com
+After=restate.service jnaapakam.service
+Wants=restate.service jnaapakam.service
+
+[Service]
+Type=simple
+User=safeharbor
+Group=safeharbor
+Environment=HERMES_HOME=/var/lib/safe-harbor/hermes
+ExecStart=/var/lib/safe-harbor/hermes/bin/hermes gateway
+EnvironmentFile=-/etc/safe-harbor/hermes/environment
+Restart=on-failure
+RestartSec=10
+# hardening / least privilege
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/safe-harbor/hermes
+StateDirectory=safe-harbor/hermes
+
+[Install]
+WantedBy=multi-user.target

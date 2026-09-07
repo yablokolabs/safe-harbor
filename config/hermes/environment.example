@@ -1,0 +1,19 @@
+# Safe Harbor Hermes manager gateway environment.
+# Installer copies this to /etc/safe-harbor/hermes/environment.
+# Fill in real values on the target; never commit the real file.
+
+# A2A security (verified keys from the pinned Hermes source):
+#   A2A_HOST           explicit bind host (loopback unless tokens are set)
+#   A2A_BEARER_TOKEN   shared inbound bearer token
+#   A2A_PEER_TOKENS    per-peer credentials, "name:token,name2:token2"
+#   A2A_TRUSTED_PEERS  allow-list of authenticated identities
+#   A2A_PUBLIC_URL     advertised base URL for Agent Card
+# No public listener. No port forwarding.
+A2A_HOST=127.0.0.1
+# A2A_BEARER_TOKEN=
+# A2A_PEER_TOKENS=
+# A2A_TRUSTED_PEERS=
+# A2A_PUBLIC_URL=http://127.0.0.1:9900/
+
+# LLM provider credentials go in Hermes' own config under HERMES_HOME
+# (/var/lib/safe-harbor/hermes/config.yaml), not here.

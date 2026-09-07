@@ -1,0 +1,10 @@
+# Safe Harbor Gen1 offline bundle artifact checksums
+# Generated 2026-09-07 from manifest/artifacts.lock (authoritative source).
+# Paths are relative to the artifact root (bundle artifacts/ dir, or the
+# acquisition cache/ dir — the two share the same component layout).
+# Format: sha256sum-compatible "<hex>  <component>/<filename>"
+d702d2db5d47490dce0ef8cded509963d1a4d434ac5d645d61df216d6b5df19b  restate/restate-server-x86_64-unknown-linux-musl.tar.xz
+78fb3ff707ec1d17044b875ecac8bef28aa39d44242824f6871ca40afe7bf217  hermes/hermes-agent-v2026.8.31.tar.gz
+8b751cf2d3c017987df8116b35aca591056a398c57f7c16a10fcc67500f2d8ee  jnaapakam/jnaapakam-7fa08bb.tar.gz
+29164734ae0e23f7ec6ddbb11adb107bf78c76f1e5774cbaba277be8ae4c4bec  python-wheels/jnaapakam-wheels-cp313-amd64.tar.gz
+173d95a0c32d18c896c46ba6fafbf3cf9c14ab74b033f81b76c883ef492a976b  uv/uv-x86_64-unknown-linux-gnu.tar.gz

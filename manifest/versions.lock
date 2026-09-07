@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "generation": 1,
+  "generated_at": "2026-09-07T07:14:00+00:00",
+  "components": {
+    "hermes": {
+      "component": "hermes-agent",
+      "version": "v0.21.0",
+      "release": "v2026.8.31",
+      "source_repository": "https://github.com/NousResearch/hermes-agent",
+      "source_url": "https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.31",
+      "architecture": "amd64",
+      "license": "MIT",
+      "role": "agent runtime + A2A",
+      "notes": "v0.21.0 is the version string inside pyproject.toml; the repository tags it as v2026.8.31. The task brief mentioned 'v0.21.0' which does not exist as a git tag; v2026.8.31 is the exact tag carrying Hermes Agent v0.21.0."
+    },
+    "jnaapakam": {
+      "component": "jnaapakam",
+      "version": "0.5.1",
+      "release": "7fa08bb8b4204ea70642d2c11d671afa91fb34e7",
+      "source_repository": "https://github.com/yablokolabs/jnaapakam",
+      "source_url": "https://github.com/yablokolabs/jnaapakam/commit/7fa08bb8b4204ea70642d2c11d671afa91fb34e7",
+      "architecture": "any",
+      "license": "MIT",
+      "role": "agent continuity (identity, memory, lineage)",
+      "notes": "Pinned to an immutable commit, never 'main'. Continuity semantics belong to jnaapakam; Safe Harbor references, never duplicates them."
+    },
+    "restate": {
+      "component": "restate",
+      "version": "v1.7.2",
+      "release": "v1.7.2",
+      "source_repository": "https://github.com/restatedev/restate",
+      "source_url": "https://github.com/restatedev/restate/releases/tag/v1.7.2",
+      "architecture": "amd64",
+      "license": "BSL-1.1",
+      "role": "durable workflow execution",
+      "notes": "Official musl x86_64 server binary. License: Business Source License 1.1 (see upstream)."
+    },
+    "uv": {
+      "component": "uv",
+      "version": "0.12.10",
+      "release": "0.12.10",
+      "source_repository": "https://github.com/astral-sh/uv",
+      "source_url": "https://github.com/astral-sh/uv/releases/tag/0.12.10",
+      "architecture": "amd64",
+      "license": "MIT OR Apache-2.0",
+      "role": "offline Python environment tooling (Hermes installation)",
+      "notes": "Vendored so Hermes can be installed on the air-gapped target without its network installer."
+    }
+  }
+}

@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "safeharbor"
+version = "0.1.0"
+description = "Safe Harbor: reproducible deployment, recovery, validation and migration of persistent local AI agent environments"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [{ name = "Yabloko Labs" }]
+keywords = ["agent", "recovery", "backup", "restore", "deployment", "continuity"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+# The Safe Harbor CLI intentionally has ZERO runtime dependencies.
+# Everything is Python stdlib so the tool itself runs on a bare,
+# air-gapped machine without any package installation step.
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+safeharbor = "safeharbor.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["safeharbor*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

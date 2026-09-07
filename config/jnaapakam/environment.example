@@ -1,0 +1,21 @@
+# Safe Harbor jñāpakaṁ memory server environment.
+# Installer copies this to /etc/safe-harbor/jnaapakam/environment.
+#
+# All keys below are verified from the pinned commit's README/CLI source.
+# The unit already passes --host 127.0.0.1 --port 8889 --db ... on the
+# command line; add optional settings here.
+
+# MEMORY_AUTH_TOKEN — required BY UPSTREAM RULE if the bind ever widens
+# beyond loopback. Leave unset while the bind stays 127.0.0.1.
+# MEMORY_AUTH_TOKEN=
+
+# Optional: Ed25519 signing key path for continuity seals
+# (requires the jnaapakam[signing] extra to be installed).
+# MEMORY_SIGNING_KEY=/var/lib/safe-harbor/resident/seals/identity.key
+
+# Optional: embedding model for semantic retrieval
+# (requires the jnaapakam[embeddings] extra to be installed).
+# MEMORY_EMBEDDING_MODEL=
+
+# Optional: auto-consolidation interval in minutes (default 30).
+# CONSOLIDATE_INTERVAL=30

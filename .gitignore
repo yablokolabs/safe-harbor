@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editors / OS
+*.swp
+.DS_Store
+
+# Local state that must never be committed
+*.db
+*.sqlite
+*.sqlite3
+.secrets/
+.env
+
+# Test scratch
+/tmp/
+tests/.scratch/# Acquired upstream artifacts are generated, never committed
+/upstream/
+acquisition/cache/

@@ -1,0 +1,37 @@
+# Safe Harbor Gen1 — Restate durable-execution server (v1.7.2).
+#
+# Data lives in /var/lib/safe-harbor/restate (persistent resident state),
+# NEVER under /opt/safe-harbor/software. Backups are quiesced copies:
+# see runbooks/BACKUP_RESTORE.md — copying a live data dir is NOT consistent.
+#
+# NOTE: Restate's ingress (8080) and admin (9070) bind all interfaces by
+# default (no bind-address config key exists — verified via --dump-config).
+# The Gen1 firewall restricts them to loopback; see runbooks/DEPLOYMENT.md.
+[Unit]
+Description=Safe Harbor Restate durable execution server (v1.7.2)
+Documentation=https://docs.restate.dev
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=safeharbor
+Group=safeharbor
+ExecStart=/opt/safe-harbor/software/restate/restate-server \
+    --base-dir /var/lib/safe-harbor/restate \
+    --node-name safeharbor-manager \
+    --no-logo
+EnvironmentFile=-/etc/safe-harbor/restate/environment
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=90
+# hardening / least privilege
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/safe-harbor/restate
+StateDirectory=safe-harbor/restate
+
+[Install]
+WantedBy=multi-user.target

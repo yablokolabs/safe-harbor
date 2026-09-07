@@ -1,0 +1,12 @@
+# Safe Harbor Restate server environment.
+# Installer copies this to /etc/safe-harbor/restate/environment.
+#
+# Restate is configured through CLI flags in the unit file plus these env
+# overrides (RESTATE_* keys are documented by restate-server --help).
+# NOTE: no bind-address config key exists (verified via --dump-config);
+# loopback restriction for ingress 8080 / admin 9070 is enforced with the
+# firewall — see runbooks/DEPLOYMENT.md for the exact rules.
+
+# RESTATE_BIND_IP=127.0.0.1        # node-to-node fabric (default: all)
+# RESTATE_NODE_NAME=safeharbor-manager
+# RESTATE_LOG_FILTER=info

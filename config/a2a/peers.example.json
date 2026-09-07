@@ -1,0 +1,21 @@
+{
+  "comment": "A2A peer configuration. Installer copies this to /etc/safe-harbor/a2a/peers.json. Tokens are NOT stored here — token_env names an environment variable that holds the bearer token used when CALLING this peer (e.g. A2A_TOKEN_SPECIALIST). Approved capabilities are the ONLY local capabilities a peer may be asked to run (L5). Placeholder addresses only.",
+  "peers": [
+    {
+      "name": "specialist-node",
+      "role": "specialist",
+      "host": "192.0.2.10",
+      "port": 9900,
+      "token_env": "A2A_TOKEN_SPECIALIST",
+      "approved_capabilities": ["get-local-time"]
+    },
+    {
+      "name": "manager-node",
+      "role": "manager",
+      "host": "127.0.0.1",
+      "port": 9900,
+      "token_env": "A2A_TOKEN_MANAGER",
+      "approved_capabilities": []
+    }
+  ]
+}

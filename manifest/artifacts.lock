@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "artifacts": [
+    {
+      "component": "restate",
+      "version": "v1.7.2",
+      "release": "v1.7.2",
+      "artifact_filename": "restate-server-x86_64-unknown-linux-musl.tar.xz",
+      "architecture": "amd64",
+      "url": "https://github.com/restatedev/restate/releases/download/v1.7.2/restate-server-x86_64-unknown-linux-musl.tar.xz",
+      "sha256": "d702d2db5d47490dce0ef8cded509963d1a4d434ac5d645d61df216d6b5df19b",
+      "size_bytes": 48333912,
+      "upstream_checksum": "d702d2db5d47490dce0ef8cded509963d1a4d434ac5d645d61df216d6b5df19b",
+      "upstream_checksum_source": "sha256.sum published in the v1.7.2 GitHub release",
+      "acquisition_timestamp": "2026-09-07T06:55:00+00:00",
+      "verification_status": "verified-against-upstream"
+    },
+    {
+      "component": "hermes",
+      "version": "v0.21.0",
+      "release": "v2026.8.31",
+      "artifact_filename": "hermes-agent-v2026.8.31.tar.gz",
+      "architecture": "amd64",
+      "url": "https://codeload.github.com/NousResearch/hermes-agent/tar.gz/refs/tags/v2026.8.31",
+      "sha256": "78fb3ff707ec1d17044b875ecac8bef28aa39d44242824f6871ca40afe7bf217",
+      "size_bytes": 69421757,
+      "upstream_checksum": null,
+      "upstream_checksum_source": "no per-artifact checksum published for codeload source tarballs",
+      "acquisition_timestamp": "2026-09-07T07:11:00+00:00",
+      "verification_status": "hash-recorded"
+    },
+    {
+      "component": "jnaapakam",
+      "version": "0.5.1",
+      "release": "7fa08bb8b4204ea70642d2c11d671afa91fb34e7",
+      "artifact_filename": "jnaapakam-7fa08bb.tar.gz",
+      "architecture": "any",
+      "url": "https://codeload.github.com/yablokolabs/jnaapakam/tar.gz/7fa08bb8b4204ea70642d2c11d671afa91fb34e7",
+      "sha256": "8b751cf2d3c017987df8116b35aca591056a398c57f7c16a10fcc67500f2d8ee",
+      "size_bytes": 144498,
+      "upstream_checksum": null,
+      "upstream_checksum_source": "no per-artifact checksum published for codeload source tarballs; commit pinned",
+      "acquisition_timestamp": "2026-09-07T07:11:00+00:00",
+      "verification_status": "hash-recorded"
+    },
+    {
+      "component": "python-wheels",
+      "version": "cp313",
+      "release": "jnaapakam-0.5.1",
+      "artifact_filename": "jnaapakam-wheels-cp313-amd64.tar.gz",
+      "architecture": "amd64",
+      "url": "built locally from PyPI wheels (jnaapakam 0.5.1 + aiohttp + transitive deps, manylinux2014 cp313)",
+      "sha256": "29164734ae0e23f7ec6ddbb11adb107bf78c76f1e5774cbaba277be8ae4c4bec",
+      "size_bytes": 2643442,
+      "upstream_checksum": null,
+      "upstream_checksum_source": "not an upstream artifact; built with 'pip download' and hashed by Safe Harbor acquisition",
+      "acquisition_timestamp": "2026-09-07T07:31:00+00:00",
+      "verification_status": "built-and-hashed"
+    },
+    {
+      "component": "uv",
+      "version": "0.12.10",
+      "release": "0.12.10",
+      "artifact_filename": "uv-x86_64-unknown-linux-gnu.tar.gz",
+      "architecture": "amd64",
+      "url": "https://github.com/astral-sh/uv/releases/download/0.12.10/uv-x86_64-unknown-linux-gnu.tar.gz",
+      "sha256": "173d95a0c32d18c896c46ba6fafbf3cf9c14ab74b033f81b76c883ef492a976b",
+      "size_bytes": 19339402,
+      "upstream_checksum": "173d95a0c32d18c896c46ba6fafbf3cf9c14ab74b033f81b76c883ef492a976b",
+      "upstream_checksum_source": "uv-x86_64-unknown-linux-gnu.tar.gz.sha256 published in the 0.12.10 GitHub release",
+      "acquisition_timestamp": "2026-09-07T07:13:00+00:00",
+      "verification_status": "verified-against-upstream"
+    }
+  ]
+}
