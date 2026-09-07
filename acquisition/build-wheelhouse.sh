@@ -10,12 +10,14 @@
 #   1. downloads each pinned wheel from its immutable files.pythonhosted.org
 #      URL (these URLs are stable forever for a given file);
 #   2. verifies each wheel's SHA-256 against the pin list below;
-#   3. assembles a byte-reproducible tarball (sorted entries, normalized
-#      owner/mode/mtime) so the resulting artifact SHA-256 is identical on
-#      any machine — which is what manifest/checksums.sha256 pins.
+#   3. assembles a byte-reproducible tarball using Python's tarfile + gzip
+#      (stdlib zlib) with normalized entry metadata (sorted names, mtime=0,
+#      uid/gid=0, fixed modes). The system `gzip`/`tar` binaries are NOT
+#      used: their output differs between distros (e.g. Debian zlib-ng vs
+#      Ubuntu zlib), which would break cross-machine reproducibility.
 #
-# Requires network access to files.pythonhosted.org. Runs on the connected
-# acquisition machine only (or CI). Never runs on the air-gapped target.
+# Requires python3 and network access to files.pythonhosted.org. Runs on the
+# connected acquisition machine only (or CI). Never runs on the target.
 set -Eeuo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -58,13 +60,42 @@ while read -r filename url sha256; do
     echo "${sha256}  ${TMP_DIR}/wheels/${filename}" | sha256sum -c --quiet -
 done <<< "${WHEELS}"
 
-echo "assembling deterministic tarball ..."
-# Byte-reproducible tar: sorted entries, normalized owner/group/mode/mtime,
-# gzip without filename/timestamp (tar -czf embeds an mtime otherwise).
-tar -C "${TMP_DIR}/wheels" \
-    --sort=name --owner=0 --group=0 --mode=a+rX,u+w --mtime='@0' \
-    --numeric-owner -cf - . \
-    | gzip -n > "${TMP_DIR}/out.tar.gz"
+echo "assembling deterministic tarball (python tarfile, no system tar/gzip) ..."
+WHEEL_DIR="${TMP_DIR}/wheels" OUT="${TMP_DIR}/out.tar.gz" python3 - <<'PYEOF'
+import gzip
+import io
+import os
+import tarfile
+
+wheel_dir = os.environ["WHEEL_DIR"]
+out = os.environ["OUT"]
+
+# Sort by name and normalize every metadata field that could differ across
+# machines or runs: mtime=0, uid/gid=0, empty uname/gname, fixed mode.
+names = sorted(n for n in os.listdir(wheel_dir) if n.endswith(".whl"))
+assert names, "no wheels found to package"
+assert len(names) == 10, f"expected 10 pinned wheels, found {len(names)}"
+
+buf = io.BytesIO()
+with tarfile.open(fileobj=buf, mode="w", format=tarfile.GNU_FORMAT) as tf:
+    for name in names:
+        path = os.path.join(wheel_dir, name)
+        info = tf.gettarinfo(path, arcname=f"./{name}")
+        info.mtime = 0
+        info.uid = 0
+        info.gid = 0
+        info.uname = ""
+        info.gname = ""
+        info.mode = 0o644
+        with open(path, "rb") as handle:
+            tf.addfile(info, handle)
+
+# gzip with mtime=0 and no filename so the header is identical everywhere
+# (Python's gzip uses stdlib zlib on every platform).
+with gzip.GzipFile(fileobj=open(out, "wb"), mode="wb", filename="", mtime=0) as gz:
+    gz.write(buf.getvalue())
+PYEOF
+
 mv "${TMP_DIR}/out.tar.gz" "${OUT_TARBALL}"
 
 echo "wheelhouse built: ${OUT_TARBALL}"

@@ -50,10 +50,10 @@
       "artifact_filename": "jnaapakam-wheels-cp313-amd64.tar.gz",
       "architecture": "amd64",
       "build_recipe": "acquisition/build-wheelhouse.sh",
-      "sha256": "c8bad21a4b44aaacc597569e428a7b7cfb011794af3bcd9ebdbd1102d36f4b2f",
-      "size_bytes": 2643072,
+      "sha256": "bce34dfea3cd692c8cfb5b275a7e30a91d023370e79d86e20d785cc9dd8c342f",
+      "size_bytes": 2644554,
       "upstream_checksum": null,
-      "upstream_checksum_source": "not an upstream artifact; deterministically rebuilt from pinned immutable PyPI files via build-wheelhouse.sh (byte-reproducible tar)",
+      "upstream_checksum_source": "not an upstream artifact; deterministically rebuilt from pinned immutable PyPI files via build-wheelhouse.sh (python tarfile/gzip, normalized metadata)",
       "acquisition_timestamp": "2026-09-07T09:35:00+00:00",
       "verification_status": "built-and-hashed"
     },
