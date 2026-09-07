@@ -1,7 +1,7 @@
 # Safe Harbor
 
 [![PyPI version](https://img.shields.io/pypi/v/safeharbor.svg?label=pypi)](https://pypi.org/project/safeharbor/)
-[![Python](https://img.shields.io/pypi/pyversions/safeharbor.svg)](https://pypi.org/project/safeharbor/)
+[![Python](https://img.shields.io/pypi/pyversions/safeharbor.svg?cacheSeconds=86400)](https://pypi.org/project/safeharbor/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/github-yablokolabs%2Fsafe--harbor-blue.svg)](https://github.com/yablokolabs/safe-harbor)
 
