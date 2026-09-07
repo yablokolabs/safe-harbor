@@ -1,25 +1,24 @@
-name: Publish to PyPI
+name: Release
 
-# Publishes safeharbor to PyPI using trusted publishing (OIDC) whenever a
-# version tag (v*) is pushed. No API tokens are stored in this repository.
+# Runs on every version tag (v*):
+#   job "publish"  -> builds sdist + wheel, publishes to PyPI via trusted
+#                     publishing (OIDC). No API tokens are stored in this repo.
+#   job "bundle"   -> assembles the verified offline bundle from the locked
+#                     artifacts and attaches it to a GitHub Release.
 #
-# One-time setup (required before the first release):
-#   1. On PyPI: https://pypi.org/manage/account/publishing/
-#   2. Create a project named "safeharbor" (or confirm ownership).
-#   3. Add a "pending publisher":
-#        PyPI Project:  safeharbor
-#        GitHub Owner:  yablokolabs
-#        GitHub Repo:   safe-harbor
-#        Workflow name: pypi.yml   (the workflow FILE NAME, not the display
-#                               name "Publish to PyPI")
-#        Environment:   pypi   (must match the job's `environment:` below)
-#   4. Tag the release as v<version> (e.g. v0.1.0) and push:
-#        git tag v0.1.0 && git push origin v0.1.0
+# The bundle job downloads every pinned artifact and verifies its SHA-256
+# against manifest/checksums.sha256 before assembling. Nothing is published
+# that does not verify.
 #
-# Troubleshooting: if the publish step fails with "environment: MISSING" or a
-# trusted-publishing exchange failure, the pending publisher on PyPI does not
-# match this workflow. Re-check on https://pypi.org/manage/account/publishing/
-# that the workflow name is exactly "pypi.yml".
+# To release:
+#   1. Bump the version in pyproject.toml (and Makefile VERSION + the
+#      VERSION constant in acquisition/acquire_core.py, which must match).
+#   2. git tag v<version> && git push origin v<version>
+#
+# First-time PyPI trusted-publisher setup (already done for v0.1.0):
+#   https://pypi.org/manage/account/publishing/
+#   owner yablokolabs / repo safe-harbor / workflow pypi.yml / env pypi
+#   (the workflow FILE NAME, not the display name "Release")
 
 on:
   push:
@@ -59,3 +58,44 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip-existing: true  # tolerate re-runs of an already-uploaded tag
+
+  bundle:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # to create the GitHub Release and attach the bundle
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Acquire and verify locked artifacts
+        run: |
+          ./acquisition/acquire.sh --if-missing
+          ./acquisition/verify.sh --strict
+
+      - name: Assemble the offline bundle
+        run: |
+          ./acquisition/assemble.sh
+
+      - name: Upload bundle as a workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: safe-harbor-offline-bundle
+          path: dist/*.tar.gz*
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            dist/safe-harbor-gen1-*.tar.gz \
+            dist/safe-harbor-gen1-*.tar.gz.sha256 \
+            --title "Safe Harbor $GITHUB_REF_NAME" \
+            --notes "Offline bundle (verified artifacts) + PyPI release of the \`safeharbor\` CLI. See the [README](https://github.com/yablokolabs/safe-harbor#readme)."

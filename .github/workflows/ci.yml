@@ -1,0 +1,37 @@
+name: CI
+
+# Runs the full Safe Harbor test suite and static checks on every push to
+# main and every pull request. The live adapter tests auto-skip when the
+# pinned upstream binaries are absent (as on this runner), so this suite is
+# safe to run anywhere and never touches systemd or real system paths.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Run test suite
+        run: python -m pytest tests/ -v
+
+      - name: Static checks (bash syntax, python compile, shellcheck)
+        run: make check
