@@ -12,7 +12,7 @@ name: Publish to PyPI
 #        GitHub Repo:   safe-harbor
 #        Workflow name: pypi.yml   (the workflow FILE NAME, not the display
 #                               name "Publish to PyPI")
-#        Environment:   (leave empty)
+#        Environment:   pypi   (must match the job's `environment:` below)
 #   4. Tag the release as v<version> (e.g. v0.1.0) and push:
 #        git tag v0.1.0 && git push origin v0.1.0
 #
@@ -29,6 +29,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: pypi
     permissions:
       id-token: write  # required for trusted publishing to PyPI
     steps:
